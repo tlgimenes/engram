@@ -331,6 +331,30 @@ engram/
 
 TDD throughout: tests precede implementation per the project's workflow.
 
+### 9.1 Development workflow: dogfood Engram as a local MCP server
+
+Engram is built by *using* Engram. The `engram-mcp` server (with at least a
+runnable stub answering `tools/list` and the inject/inspect tools) is an **early
+milestone**, not a final step, so we can register the local debug build as an MCP
+server on the developer's own Claude Code / Codex session and exercise the real
+tools while building.
+
+Dev registration points the shipped `.mcp.json` schema at the local binary:
+
+```jsonc
+// dev .mcp.json (or `claude mcp add engram -- ./target/debug/engram mcp`)
+{ "mcpServers": {
+    "engram": { "command": "./target/debug/engram", "args": ["mcp"] }
+} }
+```
+
+This gives a tight loop: implement a tool → rebuild → call it live in-session →
+assert behavior. The same config, repointed at `npx -y engram-mcp`, is what end
+users get — so dogfooding also continuously validates the real integration
+surface. Implication for the plan: bring up a thin end-to-end skeleton (store +
+one MCP tool) before fleshing out capture/curate, so there is something to
+dogfood from day one.
+
 ---
 
 ## 10. MVP scope vs. fast-follow
