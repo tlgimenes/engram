@@ -33,6 +33,15 @@
 **Interfaces:**
 - Produces: `engram_core::{Convention, Scope, Status, Source, Provenance, RepoContext}`. Methods `Scope::specificity(&self) -> u8` (Global=0, Language=1, Repo=2, Branch=3) and `Scope::matches(&self, ctx: &RepoContext) -> bool`.
 
+> **Reconciliation with Plan 0:** Plan 0 already created the workspace root
+> `Cargo.toml`, `crates/engram-core/Cargo.toml`, and a stub
+> `crates/engram-core/src/lib.rs` (with a `toolchain_smoke` test). So in this
+> task: **Step 1 is a no-op** (the root `Cargo.toml` already matches — verify it);
+> **Step 2 is unchanged but already exists** (verify the deps match — engram-core
+> needs `serde`, `chrono`, `uuid`); **Step 3 replaces the stub `lib.rs`** (drop
+> the smoke test); **Step 4+ proceed as written**. If Plan 0 was skipped, execute
+> Step 1 as a create.
+
 - [ ] **Step 1: Create the workspace root `Cargo.toml`**
 
 ```toml
