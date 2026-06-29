@@ -1,0 +1,15 @@
+[package]
+name = "engram-inject"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+engram-core = { path = "../engram-core" }
+anyhow = { workspace = true }
+
+[dev-dependencies]
+chrono = { workspace = true }
+uuid = { workspace = true }
