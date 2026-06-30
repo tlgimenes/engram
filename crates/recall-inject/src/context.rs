@@ -1,4 +1,4 @@
-use engram_core::{normalize_remote, RepoContext};
+use recall_core::{normalize_remote, RepoContext};
 use std::path::Path;
 use std::process::Command;
 

@@ -1,5 +1,5 @@
 {
-  "name": "engram-monorepo",
+  "name": "recall-monorepo",
   "private": true,
   "workspaces": ["packages/*", "apps/*"]
 }

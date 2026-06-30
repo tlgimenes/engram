@@ -1,5 +1,5 @@
 use anyhow::Result;
-use engram_core::{dedup_decision, Convention, DedupDecision, Status};
+use recall_core::{dedup_decision, Convention, DedupDecision, Status};
 use rusqlite::{params, Connection};
 use std::path::Path;
 use uuid::Uuid;
@@ -116,7 +116,7 @@ fn status_str(s: &Status) -> &'static str {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use engram_core::*;
+    use recall_core::*;
     use chrono::Utc;
     use uuid::Uuid;
 

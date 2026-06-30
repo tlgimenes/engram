@@ -147,54 +147,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d0881ea181b1df73ff77ffaaf9c7544ecc11e82fba9b5f27b262a3c73a332555"
 
 [[package]]
-name = "engram-core"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "serde",
- "uuid",
-]
-
-[[package]]
-name = "engram-inject"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "chrono",
- "engram-core",
- "tempfile",
- "uuid",
-]
-
-[[package]]
-name = "engram-mcp"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "chrono",
- "engram-core",
- "engram-inject",
- "engram-store",
- "rmcp",
- "serde",
- "tempfile",
- "tokio",
- "uuid",
-]
-
-[[package]]
-name = "engram-store"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "chrono",
- "engram-core",
- "rusqlite",
- "serde_json",
- "uuid",
-]
-
-[[package]]
 name = "errno"
 version = "0.3.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -483,6 +435,54 @@ name = "r-efi"
 version = "6.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f8dcc9c7d52a811697d2151c701e0d08956f92b0e24136cf4cf27b57a6a0d9bf"
+
+[[package]]
+name = "recall-core"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "serde",
+ "uuid",
+]
+
+[[package]]
+name = "recall-inject"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "recall-core",
+ "tempfile",
+ "uuid",
+]
+
+[[package]]
+name = "recall-mcp"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "recall-core",
+ "recall-inject",
+ "recall-store",
+ "rmcp",
+ "serde",
+ "tempfile",
+ "tokio",
+ "uuid",
+]
+
+[[package]]
+name = "recall-store"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "recall-core",
+ "rusqlite",
+ "serde_json",
+ "uuid",
+]
 
 [[package]]
 name = "ref-cast"

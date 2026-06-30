@@ -2,12 +2,12 @@ use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
 use anyhow::Result;
-use engram_inject::{detect_context, render, select};
-use engram_store::Store;
+use recall_inject::{detect_context, render, select};
+use recall_store::Store;
 use rmcp::handler::server::tool::ToolRouter;
 use rmcp::handler::server::wrapper::Parameters;
 use rmcp::model::{
-    CallToolResult, ContentBlock, Implementation, ProtocolVersion, ServerCapabilities, ServerInfo,
+    CallToolResult, Content, Implementation, ProtocolVersion, ServerCapabilities, ServerInfo,
 };
 use rmcp::transport::stdio;
 use rmcp::{schemars, tool, tool_handler, tool_router};
@@ -15,7 +15,7 @@ use rmcp::{ErrorData as McpError, ServerHandler, ServiceExt};
 
 const BUDGET_CHARS: usize = 4000;
 
-/// Plain, testable handler for the `engram_list` tool.
+/// Plain, testable handler for the `recall_list` tool.
 pub fn handle_list(db_path: &Path) -> Result<String> {
     let store = Store::open(db_path)?;
     let convs = store.active()?;
@@ -23,7 +23,7 @@ pub fn handle_list(db_path: &Path) -> Result<String> {
     Ok(non_empty(rendered))
 }
 
-/// Plain, testable handler for the `engram_conventions` tool.
+/// Plain, testable handler for the `recall_conventions` tool.
 pub fn handle_conventions(db_path: &Path, cwd: Option<&str>) -> Result<String> {
     let store = Store::open(db_path)?;
     let convs = store.active()?;
@@ -38,7 +38,7 @@ pub fn handle_conventions(db_path: &Path, cwd: Option<&str>) -> Result<String> {
 
 fn non_empty(s: String) -> String {
     if s.is_empty() {
-        "No conventions recorded yet. Teach one with: engram learn \"...\"".to_string()
+        "No conventions recorded yet. Teach one with: recall learn \"...\"".to_string()
     } else {
         s
     }
@@ -51,12 +51,12 @@ pub struct ConventionsParams {
 }
 
 #[derive(Clone)]
-pub struct Engram {
+pub struct Recall {
     db_path: Arc<PathBuf>,
-    tool_router: ToolRouter<Engram>,
+    tool_router: ToolRouter<Recall>,
 }
 
-impl Engram {
+impl Recall {
     pub fn new(db_path: PathBuf) -> Self {
         Self {
             db_path: Arc::new(db_path),
@@ -66,45 +66,45 @@ impl Engram {
 }
 
 #[tool_router]
-impl Engram {
+impl Recall {
     #[tool(
         description = "Get the developer's coding conventions relevant to the current repo, branch, and languages. Call this before writing code."
     )]
-    fn engram_conventions(
+    fn recall_conventions(
         &self,
         Parameters(p): Parameters<ConventionsParams>,
     ) -> Result<CallToolResult, McpError> {
         let text = handle_conventions(&self.db_path, p.cwd.as_deref())
             .map_err(|e| McpError::internal_error(e.to_string(), None))?;
-        Ok(CallToolResult::success(vec![ContentBlock::text(text)]))
+        Ok(CallToolResult::success(vec![Content::text(text)]))
     }
 
     #[tool(description = "List all of the developer's active coding conventions across every scope.")]
-    fn engram_list(&self) -> Result<CallToolResult, McpError> {
+    fn recall_list(&self) -> Result<CallToolResult, McpError> {
         let text = handle_list(&self.db_path)
             .map_err(|e| McpError::internal_error(e.to_string(), None))?;
-        Ok(CallToolResult::success(vec![ContentBlock::text(text)]))
+        Ok(CallToolResult::success(vec![Content::text(text)]))
     }
 }
 
 #[tool_handler]
-impl ServerHandler for Engram {
+impl ServerHandler for Recall {
     fn get_info(&self) -> ServerInfo {
         ServerInfo::new(ServerCapabilities::builder().enable_tools().build())
             .with_server_info(Implementation::from_build_env())
             .with_protocol_version(ProtocolVersion::V_2024_11_05)
             .with_instructions(
-                "Engram is the developer's personal coding-convention brain. \
-                 Call engram_conventions before writing or editing code so you \
+                "Recall is the developer's personal coding-convention brain. \
+                 Call recall_conventions before writing or editing code so you \
                  follow how this developer likes code written."
                     .to_string(),
             )
     }
 }
 
-/// Run the Engram MCP server over stdio until the client disconnects.
+/// Run the Recall MCP server over stdio until the client disconnects.
 pub async fn run_stdio(db_path: PathBuf) -> Result<()> {
-    let service = Engram::new(db_path).serve(stdio()).await?;
+    let service = Recall::new(db_path).serve(stdio()).await?;
     service.waiting().await?;
     Ok(())
 }
@@ -112,8 +112,8 @@ pub async fn run_stdio(db_path: PathBuf) -> Result<()> {
 #[cfg(test)]
 mod tests {
     use super::{handle_conventions, handle_list};
-    use engram_core::*;
-    use engram_store::Store;
+    use recall_core::*;
+    use recall_store::Store;
     use chrono::Utc;
     use uuid::Uuid;
 
@@ -134,7 +134,7 @@ mod tests {
     #[test]
     fn handle_list_returns_seeded_rule() {
         let tmp = tempfile::tempdir().unwrap();
-        let db = tmp.path().join("engram.db");
+        let db = tmp.path().join("recall.db");
         seed(&db);
         let out = handle_list(&db).unwrap();
         assert!(out.contains("Use early returns"));
@@ -143,7 +143,7 @@ mod tests {
     #[test]
     fn handle_conventions_includes_global_rule() {
         let tmp = tempfile::tempdir().unwrap();
-        let db = tmp.path().join("engram.db");
+        let db = tmp.path().join("recall.db");
         seed(&db);
         // A non-git cwd: remote_id is None, but Global conventions still match.
         let cwd = tempfile::tempdir().unwrap();
@@ -154,7 +154,7 @@ mod tests {
     #[test]
     fn handle_list_empty_db_is_friendly() {
         let tmp = tempfile::tempdir().unwrap();
-        let db = tmp.path().join("engram.db");
+        let db = tmp.path().join("recall.db");
         let out = handle_list(&db).unwrap();
         assert!(out.to_lowercase().contains("no conventions"));
     }

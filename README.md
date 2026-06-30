@@ -1,10 +1,10 @@
-# Repo Lens
+# Recall
 
-Repo Lens is a local repo-intelligence layer for coding agents.
+Recall is a local repo-intelligence layer for coding agents.
 
 The premise is simple: frontier coding agents are useful, but they repeatedly
 waste time rediscovering codebase structure, project conventions, test commands,
-branch context, and developer preferences. Repo Lens runs locally, indexes that
+branch context, and developer preferences. Recall runs locally, indexes that
 context, and exposes it to agents through MCP and lightweight plugins.
 
 It is not another chat app. It is a local co-processor for Claude Code, Codex,
@@ -27,7 +27,7 @@ stronger agents better by giving them the right context before they start.
 
 ## Product Shape
 
-Repo Lens runs as a local daemon with a repo index and an MCP server.
+Recall runs as a local daemon with a repo index and an MCP server.
 
 Core surfaces:
 
@@ -56,7 +56,7 @@ Possible tools:
 
 ## Memory Layers
 
-Repo Lens should separate memory by scope.
+Recall should separate memory by scope.
 
 Global developer memory:
 
@@ -161,7 +161,7 @@ Example output:
 
 ## Positioning
 
-Repo Lens should not compete directly with Claude Code or Codex.
+Recall should not compete directly with Claude Code or Codex.
 
 It should make those tools better.
 
@@ -181,6 +181,6 @@ Alternative framing:
 - Should memories be stored as plain markdown, SQLite rows, or both?
 - Can branch memory be derived from git worktree state and agent run logs?
 - What is the right privacy/export story for developer memory?
-- Should Repo Lens support cloud-agent escalation directly, or only provide
+- Should Recall support cloud-agent escalation directly, or only provide
   context to external agents?
 

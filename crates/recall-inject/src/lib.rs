@@ -1,7 +1,7 @@
 mod context;
 pub use context::*;
 
-use engram_core::{Convention, RepoContext, Scope, Status};
+use recall_core::{Convention, RepoContext, Scope, Status};
 
 /// Select the active conventions relevant to `ctx`, most-specific scope first,
 /// then highest confidence, then most recent — capped to a character budget.
@@ -42,7 +42,7 @@ pub fn render(convs: &[Convention]) -> String {
     if convs.is_empty() {
         return String::new();
     }
-    let mut s = String::from("# Your coding conventions (via Engram)\n\n");
+    let mut s = String::from("# Your coding conventions (via Recall)\n\n");
     for c in convs {
         s.push_str(&format!("- {} _({})_\n", c.rule.trim(), scope_label(&c.scope)));
     }
@@ -62,7 +62,7 @@ pub fn scope_label(scope: &Scope) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use engram_core::*;
+    use recall_core::*;
     use chrono::Utc;
     use uuid::Uuid;
 

@@ -1,4 +1,4 @@
-# Engram monorepo task runner. Run `just` to list recipes.
+# Recall monorepo task runner. Run `just` to list recipes.
 
 default:
     @just --list
