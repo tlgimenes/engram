@@ -1,0 +1,20 @@
+[package]
+name = "recall-capture"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+recall-core = { path = "../recall-core" }
+recall-store = { path = "../recall-store" }
+agent-cli = { path = "../agent-cli" }
+anyhow = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+chrono = { workspace = true }
+uuid = { workspace = true }
+
+[dev-dependencies]
+tokio = { workspace = true }
