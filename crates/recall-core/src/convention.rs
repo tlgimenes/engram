@@ -68,7 +68,7 @@ pub struct Convention {
     pub updated_at: DateTime<Utc>,
 }
 
-/// The resolved context Engram injects conventions for.
+/// The resolved context Recall injects conventions for.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct RepoContext {
     pub remote_id: Option<String>,
