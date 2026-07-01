@@ -43,3 +43,5 @@ jobs:
         run: bun --filter './apps/web' typecheck
       - name: Build web
         run: bun --filter './apps/web' build
+      - name: Test web
+        run: bun --filter './apps/web' test
