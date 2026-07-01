@@ -1,10 +1,17 @@
+import { Hero } from "./components/Hero";
+import { HowItWorks } from "./components/HowItWorks";
+import { Features } from "./components/Features";
+import { Install } from "./components/Install";
+import { Footer } from "./components/Footer";
+
 export default function App() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 text-zinc-100">
-      <h1 className="text-4xl font-bold tracking-tight">Recall</h1>
-      <p className="mt-3 text-zinc-400">
-        Teach your AI once. It writes code like you — in every repo, every agent.
-      </p>
-    </main>
+    <div className="min-h-screen">
+      <Hero />
+      <HowItWorks />
+      <Features />
+      <Install />
+      <Footer />
+    </div>
   );
 }
