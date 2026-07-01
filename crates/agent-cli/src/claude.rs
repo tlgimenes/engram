@@ -68,6 +68,7 @@ impl AgentProvider for ClaudeCli {
         let fut = Command::new("claude")
             .args(&args)
             .env_remove("ANTHROPIC_API_KEY") // keep subscription auth; avoid silent per-token billing
+            .kill_on_drop(true)
             .output();
         let out = tokio::time::timeout(self.timeout, fut)
             .await
