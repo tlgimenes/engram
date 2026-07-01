@@ -1,0 +1,5 @@
+{
+  "name": "recall-monorepo",
+  "private": true,
+  "workspaces": ["packages/*", "apps/*"]
+}

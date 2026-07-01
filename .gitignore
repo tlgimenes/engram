@@ -1,0 +1,16 @@
+# Rust
+**/target
+
+# JS
+**/node_modules
+**/dist
+**/build
+
+# Lockfiles we don't use
+bun.lockb
+package-lock.json
+yarn.lock
+
+# misc
+.DS_Store
+*.log

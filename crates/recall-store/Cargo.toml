@@ -1,0 +1,17 @@
+[package]
+name = "recall-store"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+recall-core = { path = "../recall-core" }
+rusqlite = { version = "0.32", features = ["bundled"] }
+serde_json = { workspace = true }
+uuid = { workspace = true }
+anyhow = { workspace = true }
+
+[dev-dependencies]
+chrono = { workspace = true }
