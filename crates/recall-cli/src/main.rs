@@ -125,11 +125,17 @@ async fn main() -> Result<()> {
                 }
                 "stop" => {
                     if let Some(tp) = recall_cli::hook_stop_transcript(&input) {
-                        // fire-and-forget: run capture in the background, don't block session end
+                        // fire-and-forget: run capture in the background, don't block session end.
+                        // Explicit stdio redirection is required — without it the child inherits
+                        // the parent's fds and keeps the hook's stdout pipe open for the child's
+                        // entire (LLM-round-trip-bound) lifetime, defeating fire-and-forget.
                         if let Ok(exe) = std::env::current_exe() {
                             let _ = std::process::Command::new(exe)
                                 .arg("capture")
                                 .arg(tp)
+                                .stdin(std::process::Stdio::null())
+                                .stdout(std::process::Stdio::null())
+                                .stderr(std::process::Stdio::null())
                                 .spawn();
                         }
                     }
