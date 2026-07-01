@@ -1,0 +1,18 @@
+{
+  "name": "@tlgimenes/recall",
+  "version": "0.0.0",
+  "description": "Teach your AI once — it writes code like you in every repo and every agent. Personal coding-convention brain (MCP server + CLI).",
+  "bin": { "recall": "bin/recall" },
+  "files": ["bin"],
+  "keywords": ["mcp", "claude", "codex", "ai", "memory", "conventions"],
+  "homepage": "https://github.com/tlgimenes/recall",
+  "repository": { "type": "git", "url": "https://github.com/tlgimenes/recall.git" },
+  "license": "MIT",
+  "optionalDependencies": {
+    "@tlgimenes/recall-darwin-arm64": "0.0.0",
+    "@tlgimenes/recall-darwin-x64": "0.0.0",
+    "@tlgimenes/recall-linux-x64": "0.0.0",
+    "@tlgimenes/recall-linux-arm64": "0.0.0",
+    "@tlgimenes/recall-win32-x64": "0.0.0"
+  }
+}

@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+const { spawnSync } = require("node:child_process");
+
+const PKGS = {
+  "darwin-arm64": "@tlgimenes/recall-darwin-arm64/bin/recall",
+  "darwin-x64": "@tlgimenes/recall-darwin-x64/bin/recall",
+  "linux-x64": "@tlgimenes/recall-linux-x64/bin/recall",
+  "linux-arm64": "@tlgimenes/recall-linux-arm64/bin/recall",
+  "win32-x64": "@tlgimenes/recall-win32-x64/bin/recall.exe",
+};
+
+const key = `${process.platform}-${process.arch}`;
+const sub = process.env.RECALL_BINARY ?? PKGS[key];
+if (!sub) {
+  console.error(`recall: unsupported platform ${key}`);
+  process.exit(1);
+}
+
+let bin;
+try {
+  bin = process.env.RECALL_BINARY ?? require.resolve(sub);
+} catch {
+  console.error(
+    `recall: could not find the native binary for ${key}. ` +
+      `Reinstall, or download from https://github.com/tlgimenes/recall/releases`,
+  );
+  process.exit(1);
+}
+
+const r = spawnSync(bin, process.argv.slice(2), { stdio: "inherit" });
+if (r.error) {
+  console.error(r.error.message);
+  process.exit(1);
+}
+process.exit(r.status ?? 1);
