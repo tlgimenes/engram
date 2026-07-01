@@ -1,0 +1,29 @@
+[package]
+name = "recall-cli"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "recall_cli"
+path = "src/lib.rs"
+
+[[bin]]
+name = "recall"
+path = "src/main.rs"
+
+[dependencies]
+recall-core = { path = "../recall-core" }
+recall-store = { path = "../recall-store" }
+recall-inject = { path = "../recall-inject" }
+recall-mcp = { path = "../recall-mcp" }
+clap = { version = "4", features = ["derive"] }
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "io-std"] }
+chrono = { workspace = true }
+uuid = { workspace = true }
+anyhow = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }
