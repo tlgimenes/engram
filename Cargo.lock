@@ -979,6 +979,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "recall-capture"
+version = "0.1.0"
+dependencies = [
+ "agent-cli",
+ "anyhow",
+ "chrono",
+ "recall-core",
+ "recall-store",
+ "serde",
+ "serde_json",
+ "tokio",
+ "uuid",
+]
+
+[[package]]
 name = "recall-cli"
 version = "0.1.0"
 dependencies = [

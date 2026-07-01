@@ -72,11 +72,11 @@ pub fn parse_candidates(v: &Value) -> Result<Vec<Candidate>> {
         .ok_or_else(|| anyhow!("missing 'conventions' array"))?;
     let mut out = Vec::new();
     for item in arr {
-        let rule = item
-            .get("rule")
-            .and_then(|r| r.as_str())
-            .ok_or_else(|| anyhow!("convention missing 'rule'"))?
-            .to_string();
+        // Skip malformed entries (missing 'rule' field), continue to next item
+        let rule = match item.get("rule").and_then(|r| r.as_str()) {
+            Some(r) => r.to_string(),
+            None => continue,
+        };
         let scope_hint = scope_hint_from_str(
             item.get("scope")
                 .and_then(|s| s.as_str())
@@ -155,5 +155,21 @@ mod tests {
             .unwrap();
         assert_eq!(cands.len(), 1);
         assert_eq!(cands[0].rule, "Prefer early returns");
+    }
+
+    #[test]
+    fn parse_candidates_skips_malformed_entries_and_keeps_valid_ones() {
+        // Mixed array: one well-formed entry, one missing 'rule' field
+        let v = json!({"conventions":[
+            {"rule":"Valid rule here","scope":"global","tags":[]},
+            {"scope":"global","tags":[]},  // Missing 'rule' - should be skipped
+            {"rule":"Another valid rule","scope":"repo","tags":["test"]}
+        ]});
+        let cands = parse_candidates(&v).unwrap();
+        // Should have 2 valid candidates, malformed one skipped
+        assert_eq!(cands.len(), 2);
+        assert_eq!(cands[0].rule, "Valid rule here");
+        assert_eq!(cands[1].rule, "Another valid rule");
+        assert!(matches!(cands[1].scope_hint, ScopeHint::Repo));
     }
 }
