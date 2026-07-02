@@ -12,11 +12,42 @@ permissions:
 jobs:
   vhs:
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
-      - uses: charmbracelet/vhs-action@v2
-        with:
-          path: docs/demo.tape
+
+      # charmbracelet/vhs-action@v2 has been broken since ~March 2025: its
+      # ffmpeg installer hardcodes the "ffmpeg-n5.1" asset-name prefix from
+      # the BtbN/FFmpeg-Builds "latest" release, which no longer publishes
+      # that series (now n7.1/n8.1/master-latest), so every run fails with
+      # "Failed to install ffmpeg". See charmbracelet/vhs-action#459; a fix
+      # (#632) is open upstream but unmerged and the project has had no
+      # releases since 2024-05, so we install VHS's runtime deps ourselves
+      # instead of depending on the action's installer.
+      - name: Install VHS runtime dependencies (ffmpeg, ttyd, vhs)
+        run: |
+          set -euo pipefail
+
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+          curl -fsSL -o /usr/local/bin/ttyd \
+            "https://github.com/tsl0922/ttyd/releases/latest/download/ttyd.x86_64"
+          chmod +x /usr/local/bin/ttyd
+
+          workdir="$(mktemp -d)"
+          gh release download -R charmbracelet/vhs --pattern "vhs_*_Linux_x86_64.tar.gz" -D "$workdir"
+          tar -xzf "$workdir"/vhs_*_Linux_x86_64.tar.gz -C "$workdir"
+          sudo install -m 0755 "$workdir"/vhs_*_Linux_x86_64/vhs /usr/local/bin/vhs
+
+          ffmpeg -version | head -n1
+          ttyd --version
+          vhs --version
+
+      - name: Render demo GIF
+        run: vhs docs/demo.tape
+
       - name: Commit regenerated GIF
         run: |
           git config user.name "github-actions[bot]"
