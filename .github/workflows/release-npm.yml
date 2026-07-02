@@ -42,12 +42,17 @@ jobs:
               *.zip)    unzip -o "$f" -d archives ;;
             esac
           done
-          # Each unpacked dir is named like recall-cli-<target>/ containing the binary.
+          # .tar.xz archives extract into a recall-cli-<target>/ subdirectory;
+          # the .zip (Windows) archive extracts flat into archives/ with no
+          # wrapper directory, so it needs separate handling.
           for d in archives/recall-cli-*/; do
             tgt="$(basename "$d" | sed 's/^recall-cli-//')"
             if [ -f "$d/recall.exe" ]; then cp "$d/recall.exe" "dist-bin/recall-$tgt.exe";
             else cp "$d/recall" "dist-bin/recall-$tgt"; fi
           done
+          if [ -f archives/recall.exe ]; then
+            cp archives/recall.exe dist-bin/recall-x86_64-pc-windows-msvc.exe
+          fi
           ls -la dist-bin
 
       - name: Generate platform packages
