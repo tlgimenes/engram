@@ -3,7 +3,7 @@ import { CopyButton } from "./CopyButton";
 const INSTALL_ROWS: { label: string; cmd: string }[] = [
   {
     label: "1. Install",
-    cmd: "curl -fsSL https://github.com/tlgimenes/recall/releases/latest/download/recall-cli-installer.sh | sh",
+    cmd: "curl -L https://github.com/tlgimenes/recall/releases/latest/download/recall-cli-installer.sh | sh",
   },
   { label: "2. Register", cmd: "claude mcp add recall --scope user -- recall mcp" },
 ];
@@ -32,7 +32,7 @@ export function Install() {
       </p>
 
       <h3 className="mt-10 text-xs font-semibold uppercase tracking-wide text-[var(--color-accent)]">
-        Install the binary — works today
+        Install the binary
       </h3>
       <div className="mt-3 divide-y divide-[var(--color-border)] overflow-hidden rounded-xl border border-[var(--color-accent-dim)] bg-[var(--color-surface)]">
         {INSTALL_ROWS.map((r) => (

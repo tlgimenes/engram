@@ -48,7 +48,7 @@ Recall is under active development. The first tagged release,
 prebuilt binaries for macOS, Linux, and Windows via a shell installer:
 
 ```sh
-curl -fsSL https://github.com/tlgimenes/recall/releases/latest/download/recall-cli-installer.sh | sh
+curl -L https://github.com/tlgimenes/recall/releases/latest/download/recall-cli-installer.sh | sh
 claude mcp add recall --scope user -- recall mcp
 ```
 

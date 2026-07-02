@@ -3,7 +3,7 @@ import { Terminal } from "./Terminal";
 
 const GH = "https://github.com/tlgimenes/recall";
 const INSTALL =
-  "curl -fsSL https://github.com/tlgimenes/recall/releases/latest/download/recall-cli-installer.sh | sh";
+  "curl -L https://github.com/tlgimenes/recall/releases/latest/download/recall-cli-installer.sh | sh";
 
 export function Hero() {
   return (
