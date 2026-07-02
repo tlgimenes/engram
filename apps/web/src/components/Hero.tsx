@@ -2,7 +2,8 @@ import { CopyButton } from "./CopyButton";
 import { Terminal } from "./Terminal";
 
 const GH = "https://github.com/tlgimenes/recall";
-const INSTALL = "git clone " + GH + " && cd recall && cargo build";
+const INSTALL =
+  "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/tlgimenes/recall/releases/latest/download/recall-cli-installer.sh | sh";
 
 export function Hero() {
   return (
@@ -35,11 +36,11 @@ export function Hero() {
           </a>
         </div>
         <p className="mt-3 text-xs text-[var(--color-muted)]">
-          No public release yet — this builds Recall from source. See{" "}
+          v0.1.0 — prebuilt for macOS, Linux, and Windows. See{" "}
           <a href="#install" className="underline hover:text-[var(--color-fg)]">
             Install
           </a>{" "}
-          for the full setup and the packaged installers coming with the first release.
+          to register it with your agent, or build from source.
         </p>
       </div>
       <div className="mt-14">

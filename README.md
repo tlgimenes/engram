@@ -43,11 +43,18 @@ others too.
 
 ## Status
 
-Recall is under active development and does not have a public release yet —
-no npm package, no Homebrew tap, no tagged GitHub release. The way to try it
-today is to build it from source; see [`docs/DEV.md`](docs/DEV.md) for the
-real, working commands (`cargo build`, then
-`claude mcp add recall -- ./target/debug/recall mcp`).
+Recall is under active development. The first tagged release,
+[v0.1.0](https://github.com/tlgimenes/recall/releases/tag/v0.1.0), ships
+prebuilt binaries for macOS, Linux, and Windows via a shell installer:
+
+```sh
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/tlgimenes/recall/releases/latest/download/recall-cli-installer.sh | sh
+claude mcp add recall --scope user -- recall mcp
+```
+
+The npm package, Homebrew tap, and Claude Code / Codex plugin listings
+aren't published yet. See [`docs/DEV.md`](docs/DEV.md) if you'd rather build
+from source.
 
 ## License
 
