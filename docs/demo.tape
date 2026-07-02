@@ -10,7 +10,7 @@ Type "# repo: acme/api · Claude Code" Enter
 Sleep 600ms
 Type "you: stop creating barrel files — import directly" Enter
 Sleep 800ms
-Type "recall ✓ learned: \"Import directly; no barrel files\" (global)" Enter
+Type 'recall ✓ learned: "Import directly; no barrel files" (global)' Enter
 Sleep 1s
 Type "" Enter
 Type "# a week later · repo: acme/web · Codex" Enter
