@@ -1,6 +1,12 @@
 import { CopyButton } from "./CopyButton";
 
-const ROWS: { label: string; cmd: string }[] = [
+const SOURCE_ROWS: { label: string; cmd: string }[] = [
+  { label: "1. Clone", cmd: "git clone https://github.com/tlgimenes/recall" },
+  { label: "2. Build", cmd: "cd recall && cargo build" },
+  { label: "3. Register", cmd: "claude mcp add recall -- ./target/debug/recall mcp" },
+];
+
+const FUTURE_ROWS: { label: string; cmd: string }[] = [
   { label: "Claude Code", cmd: "/plugin marketplace add tlgimenes/recall" },
   { label: "…then", cmd: "/plugin install recall@recall" },
   { label: "Codex", cmd: "codex plugin marketplace add tlgimenes/recall" },
@@ -14,10 +20,38 @@ export function Install() {
     <section id="install" className="mx-auto max-w-3xl px-6 py-20">
       <h2 className="text-center text-2xl font-bold tracking-tight md:text-3xl">Install</h2>
       <p className="mt-3 text-center text-sm text-[var(--color-muted)]">
-        Install the plugin in your agent — the MCP server runs via npx, no separate setup.
+        Recall hasn't cut its first public release yet, so the packaged install
+        channels below aren't live. Build from source to try it today.
       </p>
-      <div className="mt-8 divide-y divide-[var(--color-border)] overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
-        {ROWS.map((r) => (
+
+      <h3 className="mt-10 text-xs font-semibold uppercase tracking-wide text-[var(--color-accent)]">
+        Build from source — works today
+      </h3>
+      <div className="mt-3 divide-y divide-[var(--color-border)] overflow-hidden rounded-xl border border-[var(--color-accent-dim)] bg-[var(--color-surface)]">
+        {SOURCE_ROWS.map((r) => (
+          <div key={r.cmd} className="flex items-center gap-3 px-4 py-3">
+            <span className="w-24 shrink-0 text-xs text-[var(--color-muted)]">{r.label}</span>
+            <code className="flex-1 overflow-x-auto font-mono text-sm">{r.cmd}</code>
+            <CopyButton text={r.cmd} />
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-xs text-[var(--color-muted)]">
+        Full dogfooding loop, throwaway DBs, and enforcement modes are documented in{" "}
+        <a
+          href="https://github.com/tlgimenes/recall/blob/main/docs/DEV.md"
+          className="underline hover:text-[var(--color-fg)]"
+        >
+          docs/DEV.md
+        </a>
+        .
+      </p>
+
+      <h3 className="mt-10 text-xs font-semibold uppercase tracking-wide text-[var(--color-muted)]">
+        Coming with the first release — not live yet
+      </h3>
+      <div className="mt-3 divide-y divide-[var(--color-border)] overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] opacity-60">
+        {FUTURE_ROWS.map((r) => (
           <div key={r.cmd} className="flex items-center gap-3 px-4 py-3">
             <span className="w-28 shrink-0 text-xs text-[var(--color-muted)]">{r.label}</span>
             <code className="flex-1 overflow-x-auto font-mono text-sm">{r.cmd}</code>

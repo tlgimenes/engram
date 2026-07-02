@@ -1,186 +1,54 @@
 # Recall
 
-Recall is a local repo-intelligence layer for coding agents.
+Recall is a personal coding-convention brain for AI coding agents.
 
-The premise is simple: frontier coding agents are useful, but they repeatedly
-waste time rediscovering codebase structure, project conventions, test commands,
-branch context, and developer preferences. Recall runs locally, indexes that
-context, and exposes it to agents through MCP and lightweight plugins.
+You correct an agent once — "stop creating barrel files, import directly from
+the module" — and Recall remembers it. The next time you, or any agent, touch
+any repo, that convention is already there, injected automatically before the
+agent's first action.
 
-It is not another chat app. It is a local co-processor for Claude Code, Codex,
-Claude Desktop, Cursor, and other agentic coding tools.
+It is not a chat app, a repo-search tool, or a general memory service. It does
+one thing: capture the coding conventions you actually care about, scope them
+correctly, and hand them back to whichever agent you're using, wherever you're
+working.
 
-## Thesis
+## How it works
 
-Local models are not good enough to replace Sonnet/Opus-class coding agents for
-hard repo work. They are useful for bounded local tasks:
+- **Learn.** Conventions come from two sources: explicit manual teaching
+  (`recall learn "<rule>" --scope <scope>`, or a `/recall-learn` slash command
+  in-agent) and, optionally, automatic session distillation — when a supported
+  LLM provider (your existing Claude Code / Codex login, or your own API key)
+  is available, Recall can extract durable conventions from a session
+  transcript. Manual teaching always works, with no provider required.
+- **Scope.** Every convention is scoped — global (applies everywhere), by
+  language, by repo, or by branch — with more specific scopes taking
+  precedence. New conventions can supersede stale ones instead of piling up
+  forever.
+- **Inject.** A `SessionStart` hook and an MCP tool
+  (`recall_conventions`/`recall_list`) surface only the relevant, active
+  conventions for the current repo/branch/language, so agents see them before
+  they start working — not a giant static file that grows stale.
+- **Enforce (opt-in).** A `PreToolUse` hook can check edits against your
+  conventions and warn or block violations (`RECALL_ENFORCE=warn|block|off`).
+  It fails open on any error, so it never wedges a session.
 
-- summarizing files and diffs
-- classifying code areas
-- preparing context packets
-- extracting conventions from docs and examples
-- ranking relevant files
-- maintaining project and developer memory
+Recall is local-first: a single Rust binary, backed by SQLite at
+`~/.recall/recall.db`, with no cloud sync and no data leaving your machine
+except to whichever LLM provider you've configured for distillation (optional,
+and off by default without one).
 
-The product should use local compute where it is reliable and cheap, then make
-stronger agents better by giving them the right context before they start.
+It's designed to work the same way across agents — Claude Code and Codex
+today, more to follow — so a convention you teach in one agent applies in the
+others too.
 
-## Product Shape
+## Status
 
-Recall runs as a local daemon with a repo index and an MCP server.
+Recall is under active development and does not have a public release yet —
+no npm package, no Homebrew tap, no tagged GitHub release. The way to try it
+today is to build it from source; see [`docs/DEV.md`](docs/DEV.md) for the
+real, working commands (`cargo build`, then
+`claude mcp add recall -- ./target/debug/recall mcp`).
 
-Core surfaces:
+## License
 
-- MCP tools that coding agents can call
-- Codex plugin packaging for setup, skills, and local tooling
-- Claude Code / Claude Desktop integration via MCP
-- optional web UI for inspecting the repo index, not chatting
-
-The durable product is the repo-intelligence engine. Codex, Claude Code, Cursor,
-and other agent integrations are adapters.
-
-## MCP Tools
-
-Possible tools:
-
-- `repo.context_pack(task)` - produce a concise, task-specific context packet
-- `repo.search(query)` - semantic and lexical search over the repo
-- `repo.explain_file(path)` - summarize purpose, dependencies, and risks
-- `repo.related_files(path)` - find callers, callees, tests, docs, and siblings
-- `repo.diff_summary()` - summarize current git changes
-- `repo.test_plan(diff)` - suggest verification commands for a change
-- `repo.architecture_map(area)` - explain a subsystem boundary
-- `repo.find_conventions(topic)` - find project-specific implementation patterns
-- `repo.review_risks(diff)` - flag likely risks before agent review
-- `memory.record_correction(event)` - learn from developer corrections
-
-## Memory Layers
-
-Recall should separate memory by scope.
-
-Global developer memory:
-
-- preferred testing style
-- commit and PR preferences
-- tolerance for refactors
-- naming and abstraction preferences
-- recurring feedback given to agents
-
-Project memory:
-
-- architecture boundaries
-- package ownership
-- test and verification commands
-- migration rules
-- generated folders
-- compatibility constraints
-- project-specific conventions
-
-Branch memory:
-
-- current work-in-progress context
-- relevant decisions made on this branch
-- failed approaches
-- task-specific notes
-- agent run summaries
-
-Memory should be inspectable and editable. The system should show what it
-learned, where it learned it from, and what scope it applies to.
-
-## Local Model Strategy
-
-Local models are helpers, not the main coding brain.
-
-Use local models for:
-
-- summaries
-- labels
-- extraction
-- query rewriting
-- relevance explanations
-- draft PR notes
-- short context compression
-
-Use deterministic tools for:
-
-- git status, diff, log, and blame
-- ripgrep search
-- dependency graphs
-- AST and import analysis
-- test discovery
-- package metadata
-- compiler and linter output
-
-Use frontier cloud agents for:
-
-- complex implementation
-- hard debugging
-- large refactors
-- ambiguous product/code synthesis
-- long tool-use loops
-
-## Initial Architecture
-
-Potential implementation:
-
-- Rust daemon for file watching, git integration, indexing, and process control
-- SQLite for local state
-- local embeddings for semantic search
-- optional small local model for summaries and classification
-- MCP server as the primary integration surface
-- plugin adapters for Codex and Claude-compatible environments
-
-The daemon should be fast, local-first, inspectable, and easy to disable.
-
-## MVP
-
-The smallest useful MVP:
-
-1. Index a repo into SQLite.
-2. Build lexical search plus optional local embeddings.
-3. Summarize files and directories.
-4. Watch git changes.
-5. Expose MCP tools for `context_pack`, `search`, `diff_summary`, and
-   `test_plan`.
-6. Add a Codex plugin that tells Codex when to call those tools.
-7. Add a minimal inspection UI or CLI.
-
-First killer feature:
-
-> Given a coding task, produce the best context packet for a coding agent.
-
-Example output:
-
-- likely files
-- why each file matters
-- relevant snippets
-- conventions to follow
-- known tests
-- suggested commands
-- risks
-
-## Positioning
-
-Recall should not compete directly with Claude Code or Codex.
-
-It should make those tools better.
-
-Possible tagline:
-
-> Local repo memory and context for coding agents.
-
-Alternative framing:
-
-> A local context engine that helps coding agents understand your repo before
-> they edit it.
-
-## Open Questions
-
-- Should the first surface be an MCP server, a Codex plugin, or both?
-- How much local model usage is worth the resource cost?
-- Should memories be stored as plain markdown, SQLite rows, or both?
-- Can branch memory be derived from git worktree state and agent run logs?
-- What is the right privacy/export story for developer memory?
-- Should Recall support cloud-agent escalation directly, or only provide
-  context to external agents?
-
+MIT — see [`LICENSE`](LICENSE).

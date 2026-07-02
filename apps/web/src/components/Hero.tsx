@@ -2,7 +2,7 @@ import { CopyButton } from "./CopyButton";
 import { Terminal } from "./Terminal";
 
 const GH = "https://github.com/tlgimenes/recall";
-const INSTALL = "npx -y @tlgimenes/recall";
+const INSTALL = "git clone " + GH + " && cd recall && cargo build";
 
 export function Hero() {
   return (
@@ -22,7 +22,7 @@ export function Hero() {
           agent. Claude Code, Codex, and beyond.
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <div className="flex items-center gap-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2.5 font-mono text-sm">
+          <div className="flex items-center gap-3 overflow-x-auto rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2.5 font-mono text-sm">
             <span className="text-[var(--color-muted)]">$</span>
             <span>{INSTALL}</span>
             <CopyButton text={INSTALL} />
@@ -34,6 +34,13 @@ export function Hero() {
             Star on GitHub →
           </a>
         </div>
+        <p className="mt-3 text-xs text-[var(--color-muted)]">
+          No public release yet — this builds Recall from source. See{" "}
+          <a href="#install" className="underline hover:text-[var(--color-fg)]">
+            Install
+          </a>{" "}
+          for the full setup and the packaged installers coming with the first release.
+        </p>
       </div>
       <div className="mt-14">
         <Terminal />
